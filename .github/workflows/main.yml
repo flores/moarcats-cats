@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  sync:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - uses: actions/setup-python@v1
+
+    - name: Install s3cmd
+      run: python3 -m pip install s3cmd
+
+    - name: Write s3cmd config
+      run: |
+        cat <<EOF > ~/.s3cmd
+        [default]
+        access_key = ${{ secrets.S3_ACCESS_KEY }}
+        secret_key = ${{ secrets.S3_SECRET_KEY }}
+        host_base = ${{ secrets.S3_HOST_BASE }}
+        host_bucket = %(bucket)s.${{ secrets.S3_HOST_BASE }}
+        EOF
+
+    - name: Sync cats
+      env:
+        BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
+      run: |
+        echo "Syncing cats to $BUCKET_NAME ..."
+        s3cmd sync --acl-public --delete-removed . s3://$BUCKET_NAME
