@@ -20,7 +20,7 @@ jobs:
 
     - name: Write s3cmd config
       run: |
-        cat <<EOF > ~/.s3cmd
+        cat <<EOF > ~/.s3cfg
         [default]
         access_key = ${{ secrets.S3_ACCESS_KEY }}
         secret_key = ${{ secrets.S3_SECRET_KEY }}
