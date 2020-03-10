@@ -1,4 +1,4 @@
-name: CI
+name: Deploy
 
 on:
   push:
@@ -7,7 +7,6 @@ on:
 
 jobs:
   sync:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -33,4 +32,4 @@ jobs:
         BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
       run: |
         echo "Syncing cats to $BUCKET_NAME ..."
-        s3cmd sync --acl-public --delete-removed . s3://$BUCKET_NAME
+        s3cmd sync --acl-public --delete-removed --exclude=".git/*" . s3://$BUCKET_NAME
