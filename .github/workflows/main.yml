@@ -27,6 +27,10 @@ jobs:
         host_bucket = %(bucket)s.${{ secrets.S3_HOST_BASE }}
         EOF
 
+    - name: Generate list of cats
+      run: |
+        ls -1 | grep -E ".gif$" > list-of-cats.txt
+
     - name: Sync cats
       env:
         BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
